@@ -31,8 +31,8 @@ export const translations: Record<Language, TranslationTree> = {
       submit: 'Submit onboarding',
       saving: 'Saving progress...',
       saved: 'All changes saved',
-      successTitle: 'You are all set!',
-      successBody: 'We have received your onboarding responses.',
+      successTitle: 'You are all set, You rock!',
+      successBody: 'We have received your onboarding responses. We will review them and get back to you soon. The timeframe for review may vary based on the volume of submissions. But we will do our best to get back to you as soon as possible.',
       questions: {
         name: 'Full name',
         age: 'Age',
