@@ -60,5 +60,5 @@ npm run dev
 - Build output directory: `dist`
 
 ## Notes
-- The backend API lives in `functions/api/[...].ts` (Hono).
+- The backend API lives in `functions/api/[...path].ts` (Hono).
 - D1 schema is in `schema.sql`.
