@@ -17,8 +17,11 @@ const getErrorMessage = async (response: Response, fallback: string) => {
   }
 };
 
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const apiUrl = (path: string) => (API_BASE ? `${API_BASE}${path}` : path);
+
 export const requestMagicLink = async (email: string) => {
-  const response = await fetch('/api/magic-link/request', {
+  const response = await fetch(apiUrl('/api/magic-link/request'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email })
@@ -29,7 +32,7 @@ export const requestMagicLink = async (email: string) => {
 };
 
 export const verifyMagicLink = async (token: string) => {
-  const response = await fetch('/api/magic-link/verify', {
+  const response = await fetch(apiUrl('/api/magic-link/verify'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token })
@@ -41,7 +44,7 @@ export const verifyMagicLink = async (token: string) => {
 };
 
 export const getGoogleRedirectUrl = async () => {
-  const response = await fetch('/api/oauth/google/redirect_url');
+  const response = await fetch(apiUrl('/api/oauth/google/redirect_url'));
   if (!response.ok) {
     throw new Error(await getErrorMessage(response, 'OAuth unavailable'));
   }
@@ -49,7 +52,7 @@ export const getGoogleRedirectUrl = async () => {
 };
 
 export const exchangeOAuthCode = async (code: string) => {
-  const response = await fetch('/api/sessions', {
+  const response = await fetch(apiUrl('/api/sessions'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ code })
@@ -61,7 +64,7 @@ export const exchangeOAuthCode = async (code: string) => {
 };
 
 export const saveProgress = async (email: string, payload: ProgressPayload) => {
-  const response = await fetch('/api/onboarding/progress', {
+  const response = await fetch(apiUrl('/api/onboarding/progress'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, ...payload })
@@ -72,7 +75,7 @@ export const saveProgress = async (email: string, payload: ProgressPayload) => {
 };
 
 export const loadProgress = async (email: string) => {
-  const response = await fetch('/api/onboarding/progress/get', {
+  const response = await fetch(apiUrl('/api/onboarding/progress/get'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email })
@@ -84,7 +87,7 @@ export const loadProgress = async (email: string) => {
 };
 
 export const submitOnboarding = async (email: string, data: Record<string, unknown>) => {
-  const response = await fetch('/api/onboarding', {
+  const response = await fetch(apiUrl('/api/onboarding'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, data })
