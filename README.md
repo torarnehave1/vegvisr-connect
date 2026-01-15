@@ -21,7 +21,6 @@ Non-sensitive values can live in `wrangler.toml` under `[vars]` (useful for loca
 
 Vars (non-secret):
 - `PUBLIC_APP_URL`
-- `VITE_API_BASE_URL` (set to `https://connect-api.vegvisr.org` if using the dedicated Worker)
 - `MAGIC_LINK_WEBHOOK_URL`
 - `ONBOARDING_WEBHOOK_URL`
 - `GOOGLE_CLIENT_ID`
@@ -70,7 +69,7 @@ cd connect-worker
 wrangler deploy
 ```
 
-Then set `VITE_API_BASE_URL` to `https://connect-api.vegvisr.org` in your Pages env vars.
+The frontend is currently hardcoded to call `https://connect-api.vegvisr.org`.
 
 ## Notes
 - The backend API lives in `functions/api/[[path]].ts` (Hono).

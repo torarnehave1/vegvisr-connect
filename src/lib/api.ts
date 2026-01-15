@@ -17,8 +17,8 @@ const getErrorMessage = async (response: Response, fallback: string) => {
   }
 };
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
-const apiUrl = (path: string) => (API_BASE ? `${API_BASE}${path}` : path);
+const API_BASE = 'https://connect-api.vegvisr.org';
+const apiUrl = (path: string) => `${API_BASE}${path}`;
 
 export const requestMagicLink = async (email: string) => {
   const response = await fetch(apiUrl('/api/magic-link/request'), {
