@@ -42,6 +42,8 @@ wrangler pages secret put VEGVISR_API_TOKEN
 wrangler pages secret put GOOGLE_CLIENT_SECRET
 ```
 
+Note: Wrangler v4 does not support `pages project set-env` and only supports secrets via CLI. For non-secret env vars, use the Pages dashboard or store the value as a secret instead.
+
 Only set the secrets you actually use. For Google OAuth, ensure `GOOGLE_REDIRECT_URI` matches your Pages URL + `/auth/callback`.
 
 Suggested URLs:
