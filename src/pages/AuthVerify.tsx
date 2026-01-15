@@ -25,7 +25,8 @@ const AuthVerify = () => {
         setStoredEmail(email);
         navigate('/onboarding');
       } catch (err) {
-        setError(t('auth.failure'));
+        const message = err instanceof Error ? err.message : '';
+        setError(message || t('auth.failure'));
       }
     };
 
