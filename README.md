@@ -1,6 +1,6 @@
 # Vegvisr Onboarding
 
-## Cloudflare Pages + Functions (Workers) setup
+## Cloudflare Pages setup
 
 1) Install dependencies
 ```bash
@@ -72,5 +72,4 @@ wrangler deploy
 The frontend is currently hardcoded to call `https://connect-api.vegvisr.org`.
 
 ## Notes
-- The backend API lives in `functions/api/[[path]].ts` (Hono).
 - D1 schema is in `schema.sql`.
