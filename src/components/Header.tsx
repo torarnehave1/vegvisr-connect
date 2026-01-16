@@ -9,16 +9,16 @@ interface HeaderProps {
 
 const Header = ({ language, onLanguageChange }: HeaderProps) => {
   return (
-    <header className="flex items-center justify-between px-6 py-6">
-      <div className="flex items-center gap-4">
-       
-        <img src={logo} alt="Vegvisr Connect" className="h-[300px] w-[300px]" />
-
-        <div className="text-lg font-semibold tracking-[0.2em] text-white/70">
-          VEGVISR
+    <header className="px-6 py-6">
+      <div className="mx-auto flex w-full max-w-4xl items-start justify-between">
+        <div className="flex items-center gap-4">
+          <img src={logo} alt="Vegvisr Connect" className="h-[300px] w-[300px]" />
+          <div className="text-lg font-semibold tracking-[0.2em] text-white/70">
+            VEGVISR
+          </div>
         </div>
+        <LanguageToggle language={language} onToggle={onLanguageChange} />
       </div>
-      <LanguageToggle language={language} onToggle={onLanguageChange} />
     </header>
   );
 };
