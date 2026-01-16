@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Mail, Sparkles } from 'lucide-react';
-import { getGoogleRedirectUrl, requestMagicLink } from '../lib/api';
+import { requestMagicLink } from '../lib/api';
 import { useLanguage } from '../lib/LanguageContext';
 import { useTranslation } from '../lib/useTranslation';
 
@@ -12,6 +12,8 @@ const Home = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
+  // Google sign-in is intentionally disabled for now.
+  /*
   const handleGoogle = async () => {
     setError('');
     setLoading(true);
@@ -23,6 +25,7 @@ const Home = () => {
       setLoading(false);
     }
   };
+  */
 
   const handleMagicLink = async () => {
     if (!email.trim()) {
@@ -56,6 +59,7 @@ const Home = () => {
         <div className="glass rounded-3xl p-6 shadow-glass">
           <p className="text-sm font-semibold text-white/80">{t('home.chooseAuth')}</p>
           <div className="mt-4 flex flex-col gap-3">
+            {/*
             <button
               type="button"
               onClick={handleGoogle}
@@ -65,6 +69,7 @@ const Home = () => {
               {t('home.google')}
               <span className="text-xs text-white/70">G</span>
             </button>
+            */}
             <div className="rounded-2xl border border-white/30 bg-white/10 p-4">
               <label className="text-xs font-semibold uppercase tracking-widest text-white/60">
                 {t('common.emailLabel')}
