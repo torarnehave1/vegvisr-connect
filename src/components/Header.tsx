@@ -12,7 +12,7 @@ const Header = ({ language, onLanguageChange }: HeaderProps) => {
     <header className="px-6 py-6">
       <div className="mx-auto flex w-full max-w-4xl items-start justify-between">
         <div className="flex items-center gap-4">
-          <img src={logo} alt="Vegvisr Connect" className="h-[300px] w-[300px]" />
+          <img src={logo} alt="Vegvisr Connect" className="h-[150px] w-[150px]" />
           
         </div>
         <LanguageToggle language={language} onToggle={onLanguageChange} />
