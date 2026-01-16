@@ -1,3 +1,4 @@
 node_modules
 connect-worker/wrangler.toml
 connect-worker/index.js
+wrangler.toml
