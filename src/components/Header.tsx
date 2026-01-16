@@ -10,8 +10,10 @@ interface HeaderProps {
 const Header = ({ language, onLanguageChange }: HeaderProps) => {
   return (
     <header className="flex items-center justify-between px-6 py-6">
-      <div className="flex items-center gap-3">
-        <img src={logo} alt="Vegvisr Connect" className="h-10 w-10 rounded-2xl" />
+      <div className="flex items-center gap-4">
+       
+        <img src={logo} alt="Vegvisr Connect" className="h-[300px] w-[300px]" />
+
         <div className="text-lg font-semibold tracking-[0.2em] text-white/70">
           VEGVISR
         </div>

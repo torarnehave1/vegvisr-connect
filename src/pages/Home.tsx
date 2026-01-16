@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Mail, Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { getGoogleRedirectUrl, requestMagicLink } from '../lib/api';
 import { useLanguage } from '../lib/LanguageContext';
 import { useTranslation } from '../lib/useTranslation';
@@ -8,7 +7,6 @@ import { useTranslation } from '../lib/useTranslation';
 const Home = () => {
   const { language } = useLanguage();
   const t = useTranslation(language);
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -45,11 +43,11 @@ const Home = () => {
   };
 
   return (
-    <section className="mx-auto grid max-w-5xl gap-12 md:grid-cols-[1.2fr,0.8fr]">
+    <section className="mx-auto max-w-4xl">
       <div className="space-y-6 text-white">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.3em] text-white/70">
           <Sparkles className="h-4 w-4" />
-          Vegvisr onboarding
+          Vegvisr Connect - Early Access
         </div>
         <h1 className="text-4xl font-semibold leading-tight md:text-5xl">
           <span className="gradient-text">{t('home.title')}</span>
@@ -97,22 +95,6 @@ const Home = () => {
             {error && <p className="text-sm text-rose-200">{error}</p>}
           </div>
         </div>
-      </div>
-      <div className="glass h-fit rounded-3xl p-6 text-white shadow-glass md:mt-24">
-        <h2 className="text-2xl font-semibold">{t('onboarding.title')}</h2>
-        <p className="mt-3 text-sm text-white/70">{t('common.autosaveHint')}</p>
-        <ul className="mt-6 space-y-3 text-sm text-white/70">
-          <li>1. {t('onboarding.questions.name')}</li>
-          <li>2. {t('onboarding.learning.motivation')}</li>
-          <li>3. {t('onboarding.interests.title')}</li>
-        </ul>
-        <button
-          type="button"
-          onClick={() => navigate('/onboarding')}
-          className="mt-6 w-full rounded-xl border border-white/30 bg-white/10 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/20"
-        >
-          {t('onboarding.next')}
-        </button>
       </div>
     </section>
   );
