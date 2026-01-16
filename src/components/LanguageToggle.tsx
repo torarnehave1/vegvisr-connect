@@ -3,7 +3,8 @@ import type { Language } from '../lib/i18n';
 
 const labelMap: Record<Language, string> = {
   en: 'EN',
-  is: 'IS'
+  is: 'IS',
+  no: 'NO'
 };
 
 interface LanguageToggleProps {
@@ -12,7 +13,9 @@ interface LanguageToggleProps {
 }
 
 const LanguageToggle = ({ language, onToggle }: LanguageToggleProps) => {
-  const next = language === 'en' ? 'is' : 'en';
+  const order: Language[] = ['en', 'no', 'is'];
+  const currentIndex = order.indexOf(language);
+  const next = order[(currentIndex + 1) % order.length];
 
   return (
     <button

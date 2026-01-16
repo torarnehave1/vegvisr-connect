@@ -1,4 +1,4 @@
-export type Language = 'en' | 'is';
+export type Language = 'en' | 'is' | 'no';
 
 type TranslationValue = string | string[] | TranslationTree;
 type TranslationTree = Record<string, TranslationValue>;
@@ -8,7 +8,7 @@ export const translations: Record<Language, TranslationTree> = {
     home: {
       title: 'Find your learning path with Vegvisr',
       subtitle: 'Answer a few questions so we can tailor your onboarding experience.',
-      chooseAuth: 'Choose how you want to sign in',
+      chooseAuth: 'Enter your email to get a magic link',
       google: 'Continue with Google',
       email: 'Continue with email',
       emailPlaceholder: 'Enter your email address',
@@ -106,7 +106,7 @@ export const translations: Record<Language, TranslationTree> = {
     home: {
       title: 'Finndu þína leið með Vegvisr',
       subtitle: 'Svaraðu nokkrum spurningum svo við getum sérsniðið onboarding.',
-      chooseAuth: 'Veldu hvernig þú vilt skrá þig inn',
+      chooseAuth: 'Sláðu inn netfangið til að fá töfrahlekk',
       google: 'Halda áfram með Google',
       email: 'Halda áfram með netfangi',
       emailPlaceholder: 'Sláðu inn netfangið þitt',
@@ -198,6 +198,105 @@ export const translations: Record<Language, TranslationTree> = {
       tryAgain: 'Reyndu aftur',
       signOut: 'Nota annað netfang',
       autosaveHint: 'Framvinda vistast sjálfkrafa.'
+    }
+  }
+  ,
+  no: {
+    home: {
+      title: 'Finn din læringsvei med Vegvisr',
+      subtitle: 'Svar på noen spørsmål så vi kan tilpasse onboardingen din.',
+      chooseAuth: 'Skriv inn e-posten din for å få en magisk lenke',
+      google: 'Fortsett med Google',
+      email: 'Fortsett med e-post',
+      emailPlaceholder: 'Skriv inn e-postadressen din',
+      sendLink: 'Send magisk lenke',
+      linkSent: 'Magisk lenke sendt. Sjekk innboksen.',
+      language: 'Språk'
+    },
+    auth: {
+      verifying: 'Verifiserer tilgangen din...',
+      success: 'Du er verifisert. Sender deg til onboarding.',
+      failure: 'Vi kunne ikke verifisere lenken. Be om en ny.',
+      callbackError: 'Vi kunne ikke fullføre Google-innloggingen. Prøv igjen.'
+    },
+    onboarding: {
+      title: 'Din Vegvisr onboarding',
+      step: 'Steg',
+      of: 'av',
+      next: 'Neste steg',
+      back: 'Tilbake',
+      submit: 'Send onboarding',
+      saving: 'Lagrer fremdrift...',
+      saved: 'Alt er lagret',
+      successTitle: 'Du er klar!',
+      successBody:
+        'Vi har mottatt svarene dine. Vi vil gå gjennom dem og komme tilbake til deg så snart vi kan. Tidsrammen kan variere avhengig av antall innsendelser.',
+      questions: {
+        name: 'Fullt navn',
+        age: 'Alder',
+        education: 'Høyeste utdanningsnivå',
+        employment: 'Nåværende arbeidssituasjon',
+        location: 'Sted'
+      },
+      learning: {
+        motivation: 'Hva motiverer deg til å lære nå?',
+        motivationHelp: 'Velg det som passer best.',
+        motivationOptions: [
+          'Jeg vil ha en strukturert læringsvei',
+          'Jeg trenger ansvar og fremdrift',
+          'Jeg vil bytte karriere eller utvikle meg',
+          'Jeg utforsker nye ideer og verktøy'
+        ],
+        experience: 'Beskriv tidligere erfaring med nettlæring',
+        experienceHelp: 'Velg utsagnet som passer best.',
+        experienceOptions: [
+          'Jeg er ny til nettlæring',
+          'Jeg har prøvd noen kurs',
+          'Jeg lærer jevnlig på nett',
+          'Jeg veileder eller underviser andre på nett'
+        ],
+        time: 'Hvor mange timer per uke kan du bruke?',
+        timeHelp: 'Dette hjelper oss å sette et realistisk tempo.',
+        timeOptions: ['1-3 timer', '3-5 timer', '5-8 timer', '8+ timer'],
+        preferences: 'Foretrukket læringsstil',
+        preferencesHelp: 'Velg stilen som holder deg engasjert.',
+        preferencesOptions: [
+          'Praktiske prosjekter',
+          'Korte leksjoner med øving',
+          'Dype dykk med lesing',
+          'Gruppebasert læring og tilbakemelding'
+        ],
+        detailPrompt: 'Legg til detaljer (valgfritt)'
+      },
+      interests: {
+        title: 'Velg interesser',
+        description: 'Velg temaene som frister deg mest.',
+        topics: [
+          'Dataleseferdighet',
+          'Grunnleggende AI',
+          'Produktdesign',
+          'Tjenestedesign',
+          'Bærekraft',
+          'Ledelse',
+          'Prosjektledelse',
+          'Forretningsstrategi',
+          'Kreativ koding',
+          'Historiefortelling',
+          'Markedsvekst',
+          'UX-forskning',
+          'Entreprenørskap',
+          'Fintech',
+          'Velvære'
+        ]
+      }
+    },
+    common: {
+      loading: 'Laster...',
+      emailLabel: 'E-postadresse',
+      required: 'Dette feltet er påkrevd',
+      tryAgain: 'Prøv igjen',
+      signOut: 'Bruk en annen e-post',
+      autosaveHint: 'Fremdriften lagres automatisk.'
     }
   }
 };
