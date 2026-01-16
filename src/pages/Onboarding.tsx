@@ -1,12 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle2 } from 'lucide-react';
 import StepIndicator from '../components/StepIndicator';
-import { getInterestTopics } from '../lib/i18n';
+import { getInterestTopics, getLearningOptions } from '../lib/i18n';
 import { useLanguage } from '../lib/LanguageContext';
 import { useTranslation } from '../lib/useTranslation';
-import { clearStoredEmail, getStoredEmail } from '../lib/storage';
-import { loadProgress, saveProgress, submitOnboarding } from '../lib/api';
+import { clearStoredEmail, getStoredEmail, setStoredEmail } from '../lib/storage';
+import {
+  loadOnboardingReview,
+  loadProgress,
+  saveProgress,
+  submitOnboarding,
+  updateOnboardingReview
+} from '../lib/api';
 import { interestsSchema, learningSchema, personalSchema } from '../lib/validation';
 
 const emptyData = {
@@ -26,7 +32,9 @@ const Onboarding = () => {
   const { language } = useLanguage();
   const t = useTranslation(language);
   const navigate = useNavigate();
-  const email = getStoredEmail();
+  const [searchParams] = useSearchParams();
+  const reviewToken = searchParams.get('token') || searchParams.get('reviewToken') || '';
+  const [email, setEmail] = useState(() => getStoredEmail());
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(emptyData);
   const [savingState, setSavingState] = useState<'idle' | 'saving' | 'saved'>('idle');
@@ -37,6 +45,10 @@ const Onboarding = () => {
   const saveTimer = useRef<number | null>(null);
 
   const topics = getInterestTopics(language);
+  const motivationOptions = getLearningOptions(language, 'motivationOptions');
+  const experienceOptions = getLearningOptions(language, 'experienceOptions');
+  const timeOptions = getLearningOptions(language, 'timeOptions');
+  const preferencesOptions = getLearningOptions(language, 'preferencesOptions');
   const totalSteps = 3;
 
   const canGoNext = useMemo(() => {
@@ -50,17 +62,25 @@ const Onboarding = () => {
   }, [formData, step]);
 
   useEffect(() => {
-    if (!email) {
+    if (!email && !reviewToken) {
       navigate('/');
       return;
     }
 
     const run = async () => {
       try {
-        const progress = await loadProgress(email);
-        if (progress) {
-          setStep(progress.step);
-          setFormData({ ...emptyData, ...progress.data });
+        if (reviewToken) {
+          const review = await loadOnboardingReview(reviewToken);
+          setStoredEmail(review.email);
+          setEmail(review.email);
+          setStep(1);
+          setFormData({ ...emptyData, ...review.data });
+        } else if (email) {
+          const progress = await loadProgress(email);
+          if (progress) {
+            setStep(progress.step);
+            setFormData({ ...emptyData, ...progress.data });
+          }
         }
       } catch (err) {
         setError('Unable to load saved progress.');
@@ -70,7 +90,7 @@ const Onboarding = () => {
     };
 
     run();
-  }, [email, navigate]);
+  }, [email, navigate, reviewToken]);
 
   useEffect(() => {
     if (!email || loading || submitted || submitting) {
@@ -131,12 +151,41 @@ const Onboarding = () => {
     setError('');
     setSubmitting(true);
     try {
-      await submitOnboarding(email, formData);
+      if (reviewToken) {
+        await updateOnboardingReview(reviewToken, formData);
+      } else {
+        await submitOnboarding(email, formData);
+      }
       setSubmitted(true);
     } catch (err) {
       setError('Submission failed. Please try again.');
       setSubmitting(false);
     }
+  };
+
+  const renderSingleChoice = (field: keyof typeof emptyData, options: string[]) => {
+    return (
+      <div className="grid gap-3 md:grid-cols-2">
+        {options.map((option) => {
+          const selected = formData[field] === option;
+          return (
+            <button
+              key={option}
+              type="button"
+              onClick={() => handleChange(field, option)}
+              disabled={submitting}
+              className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${
+                selected
+                  ? 'border-white/70 bg-white/25 text-white'
+                  : 'border-white/20 bg-white/5 text-white/80 hover:border-white/40 hover:bg-white/10'
+              }`}
+            >
+              {option}
+            </button>
+          );
+        })}
+      </div>
+    );
   };
 
   if (loading) {
@@ -169,6 +218,7 @@ const Onboarding = () => {
             type="button"
             onClick={() => {
               clearStoredEmail();
+              setEmail('');
               navigate('/');
             }}
             className="text-xs font-semibold uppercase tracking-widest text-white/60 hover:text-white"
@@ -237,46 +287,54 @@ const Onboarding = () => {
         )}
 
         {step === 2 && (
-          <div className="grid gap-5">
-            <label className="space-y-2 text-sm">
-              <span className="text-white/80">{t('onboarding.learning.motivation')}</span>
+          <div className="grid gap-8">
+            <div className="space-y-3 text-sm">
+              <div className="space-y-1">
+                <span className="text-white/80">{t('onboarding.learning.motivation')}</span>
+                <p className="text-xs text-white/60">{t('onboarding.learning.motivationHelp')}</p>
+              </div>
+              {renderSingleChoice('motivation', motivationOptions)}
               <textarea
-                rows={3}
+                rows={2}
                 value={formData.motivation}
                 onChange={(event) => handleChange('motivation', event.target.value)}
                 disabled={submitting}
+                placeholder={t('onboarding.learning.detailPrompt')}
                 className="w-full rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-white"
               />
-            </label>
-            <label className="space-y-2 text-sm">
-              <span className="text-white/80">{t('onboarding.learning.experience')}</span>
+            </div>
+
+            <div className="space-y-3 text-sm">
+              <div className="space-y-1">
+                <span className="text-white/80">{t('onboarding.learning.experience')}</span>
+                <p className="text-xs text-white/60">{t('onboarding.learning.experienceHelp')}</p>
+              </div>
+              {renderSingleChoice('experience', experienceOptions)}
               <textarea
-                rows={3}
+                rows={2}
                 value={formData.experience}
                 onChange={(event) => handleChange('experience', event.target.value)}
                 disabled={submitting}
+                placeholder={t('onboarding.learning.detailPrompt')}
                 className="w-full rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-white"
               />
-            </label>
-            <div className="grid gap-5 md:grid-cols-2">
-              <label className="space-y-2 text-sm">
-                <span className="text-white/80">{t('onboarding.learning.time')}</span>
-                <input
-                  value={formData.time}
-                  onChange={(event) => handleChange('time', event.target.value)}
-                  disabled={submitting}
-                  className="w-full rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-white"
-                />
-              </label>
-              <label className="space-y-2 text-sm">
-                <span className="text-white/80">{t('onboarding.learning.preferences')}</span>
-                <input
-                  value={formData.preferences}
-                  onChange={(event) => handleChange('preferences', event.target.value)}
-                  disabled={submitting}
-                  className="w-full rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-white"
-                />
-              </label>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-3 text-sm">
+                <div className="space-y-1">
+                  <span className="text-white/80">{t('onboarding.learning.time')}</span>
+                  <p className="text-xs text-white/60">{t('onboarding.learning.timeHelp')}</p>
+                </div>
+                {renderSingleChoice('time', timeOptions)}
+              </div>
+              <div className="space-y-3 text-sm">
+                <div className="space-y-1">
+                  <span className="text-white/80">{t('onboarding.learning.preferences')}</span>
+                  <p className="text-xs text-white/60">{t('onboarding.learning.preferencesHelp')}</p>
+                </div>
+                {renderSingleChoice('preferences', preferencesOptions)}
+              </div>
             </div>
           </div>
         )}

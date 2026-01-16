@@ -38,6 +38,7 @@ const App = () => {
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/auth/verify" element={<AuthVerify />} />
               <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/onboarding/review" element={<Onboarding />} />
             </Routes>
           </main>
         </div>

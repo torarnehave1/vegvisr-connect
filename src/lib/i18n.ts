@@ -42,9 +42,34 @@ export const translations: Record<Language, TranslationTree> = {
       },
       learning: {
         motivation: 'What motivates you to learn right now?',
+        motivationHelp: 'Pick the option that feels closest to you.',
+        motivationOptions: [
+          'I want a structured learning path',
+          'I need accountability and momentum',
+          'I want to change careers or level up',
+          'I am exploring new ideas and tools'
+        ],
         experience: 'Describe your prior experience with learning online',
+        experienceHelp: 'Choose the statement that best matches your experience.',
+        experienceOptions: [
+          'I am new to online learning',
+          'I have tried a few courses',
+          'I learn online regularly',
+          'I mentor or teach others online'
+        ],
         time: 'How many hours per week can you commit?',
+        timeHelp: 'This helps us design a realistic pace.',
+        timeOptions: ['1-3 hours', '3-5 hours', '5-8 hours', '8+ hours'],
         preferences: 'Preferred learning style'
+        ,
+        preferencesHelp: 'Select the style that keeps you engaged.',
+        preferencesOptions: [
+          'Hands-on projects',
+          'Short lessons with practice',
+          'Deep dives with reading',
+          'Group learning and feedback'
+        ],
+        detailPrompt: 'Add details or edit your selection (optional)'
       },
       interests: {
         title: 'Select your interests',
@@ -115,9 +140,34 @@ export const translations: Record<Language, TranslationTree> = {
       },
       learning: {
         motivation: 'Hvað hvetur þig til að læra núna?',
+        motivationHelp: 'Veldu það sem á best við þig.',
+        motivationOptions: [
+          'Mig vantar skýra námsleið',
+          'Ég þarf ábyrgð og skriðþunga',
+          'Ég vil breyta um starf eða bæta mig',
+          'Ég er að kanna nýjar hugmyndir og verkfæri'
+        ],
         experience: 'Lýstu fyrri reynslu af netnámi',
+        experienceHelp: 'Veldu setninguna sem lýsir þér best.',
+        experienceOptions: [
+          'Ég er ný í netnámi',
+          'Ég hef prófað nokkur námskeið',
+          'Ég læri reglulega á netinu',
+          'Ég leiðbeini eða kenni öðrum á netinu'
+        ],
         time: 'Hversu margar klst. á viku getur þú varið?',
+        timeHelp: 'Þetta hjálpar okkur að stilla raunhæfan hraða.',
+        timeOptions: ['1-3 klst', '3-5 klst', '5-8 klst', '8+ klst'],
         preferences: 'Uppáhalds námsstíll'
+        ,
+        preferencesHelp: 'Veldu stílinn sem heldur þér virkum.',
+        preferencesOptions: [
+          'Verkefnamiðað',
+          'Stuttar kennslulotur með æfingum',
+          'Ítarlegar yfirferðir og lestur',
+          'Hópvinna og endurgjöf'
+        ],
+        detailPrompt: 'Bættu við nánari upplýsingum (valfrjálst)'
       },
       interests: {
         title: 'Veldu áhugasvið',
@@ -156,6 +206,16 @@ export const getInterestTopics = (language: Language) => {
   const interests = translations[language].onboarding as TranslationTree;
   const topicValue = (interests?.interests as TranslationTree)?.topics;
   return Array.isArray(topicValue) ? topicValue : [];
+};
+
+export const getLearningOptions = (
+  language: Language,
+  key: 'motivationOptions' | 'experienceOptions' | 'timeOptions' | 'preferencesOptions'
+) => {
+  const onboarding = translations[language].onboarding as TranslationTree;
+  const learning = onboarding?.learning as TranslationTree;
+  const value = learning?.[key];
+  return Array.isArray(value) ? value : [];
 };
 
 export const getTranslation = (language: Language, key: string): string => {

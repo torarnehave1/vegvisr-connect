@@ -96,3 +96,28 @@ export const submitOnboarding = async (email: string, data: Record<string, unkno
     throw new Error(await getErrorMessage(response, 'Submission failed'));
   }
 };
+
+export const loadOnboardingReview = async (token: string) => {
+  const response = await fetch(apiUrl(`/api/onboarding/review?token=${encodeURIComponent(token)}`));
+  if (!response.ok) {
+    throw new Error(await getErrorMessage(response, 'Review link invalid'));
+  }
+  return (await response.json()) as {
+    email: string;
+    version: number;
+    submittedAt: string;
+    status: string;
+    data: Record<string, unknown>;
+  };
+};
+
+export const updateOnboardingReview = async (token: string, data: Record<string, unknown>) => {
+  const response = await fetch(apiUrl('/api/onboarding/review/update'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, data })
+  });
+  if (!response.ok) {
+    throw new Error(await getErrorMessage(response, 'Review update failed'));
+  }
+};
