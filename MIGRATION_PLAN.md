@@ -92,11 +92,15 @@ Deliverables:
 - `vegvisr-app` (main app views)
 
 ## Deployment strategy
-- Each repo deploys to its own Cloudflare Pages project.
+- Each repo deploys to its own Cloudflare Pages project (unless consolidated).
 - Shared UI kit published as a package or copied via template.
 - Common env var naming across projects.
 - Branding configuration sourced per domain (env, JSON, or worker-backed).
 - Custom domains should route through `brand-worker` (or equivalent proxy) to inject `x-original-hostname`.
+- Consider a central "Control Center" app for managing worker/env config:
+  - Distribute vars/secrets to workers via the Cloudflare API.
+  - Provide per-project audit + change history.
+  - Enforce consistent env schemas across apps.
 
 ## Risks and mitigations
 - **UI drift:** enforce shared tokens + component kit.
