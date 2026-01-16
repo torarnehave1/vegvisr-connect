@@ -33,6 +33,8 @@ export const translations: Record<Language, TranslationTree> = {
       saved: 'All changes saved',
       successTitle: 'You are all set, You rock!',
       successBody: 'We have received your onboarding responses. We will review them and get back to you soon. The timeframe for review may vary based on the volume of submissions. But we will do our best to get back to you as soon as possible.',
+      successMomentum:
+        'Momentum is a weekly one-hour stream for people who want to grow in system development and coding.',
       questions: {
         name: 'Full name',
         age: 'Age',
@@ -131,6 +133,8 @@ export const translations: Record<Language, TranslationTree> = {
       saved: 'Allt vistað',
       successTitle: 'Allt klárt!',
       successBody: 'Við höfum móttekið svörin þín.',
+      successMomentum:
+        'Momentum er vikulegur einn klukkutími í streymi fyrir fólk sem vill styrkja sig í kerfisþróun og forritun.',
       questions: {
         name: 'Fullt nafn',
         age: 'Aldur',
@@ -231,6 +235,8 @@ export const translations: Record<Language, TranslationTree> = {
       successTitle: 'Du er klar!',
       successBody:
         'Vi har mottatt svarene dine. Vi vil gå gjennom dem og komme tilbake til deg så snart vi kan. Tidsrammen kan variere avhengig av antall innsendelser.',
+      successMomentum:
+        'Momentum er en ukentlig times sending for deg som vil utvikle deg innen systemutvikling og koding.',
       questions: {
         name: 'Fullt navn',
         age: 'Alder',
@@ -329,6 +335,8 @@ export const translations: Record<Language, TranslationTree> = {
       successTitle: 'Je bent er klaar voor!',
       successBody:
         'We hebben je antwoorden ontvangen. We bekijken ze en nemen zo snel mogelijk contact met je op. De doorlooptijd kan variëren op basis van het aantal inzendingen.',
+      successMomentum:
+        'Momentum is een wekelijkse stream van een uur voor mensen die zich willen ontwikkelen in systeemontwikkeling en coderen.',
       questions: {
         name: 'Volledige naam',
         age: 'Leeftijd',

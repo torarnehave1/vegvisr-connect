@@ -202,6 +202,7 @@ const Onboarding = () => {
         <CheckCircle2 className="h-12 w-12 text-emerald-300" />
         <h2 className="mt-4 text-3xl font-semibold">{t('onboarding.successTitle')}</h2>
         <p className="mt-3 text-white/70">{t('onboarding.successBody')}</p>
+        <p className="mt-4 text-sm text-white/60">{t('onboarding.successMomentum')}</p>
       </div>
     );
   }
