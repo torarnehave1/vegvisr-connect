@@ -25,7 +25,8 @@ const emptyData = {
   experience: '',
   time: '',
   preferences: '',
-  interests: [] as string[]
+  interests: [] as string[],
+  momentumInterest: false
 };
 
 const Onboarding = () => {
@@ -118,7 +119,7 @@ const Onboarding = () => {
     };
   }, [email, formData, loading, step, submitted]);
 
-  const handleChange = (field: keyof typeof emptyData, value: string) => {
+  const handleChange = (field: keyof typeof emptyData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -363,6 +364,23 @@ const Onboarding = () => {
                   </button>
                 );
               })}
+            </div>
+            <div className="mt-8 rounded-2xl border border-white/20 bg-white/5 p-4">
+              <label className="flex items-start gap-3 text-sm text-white/80">
+                <input
+                  type="checkbox"
+                  checked={formData.momentumInterest}
+                  onChange={(event) => handleChange('momentumInterest', event.target.checked)}
+                  disabled={submitting}
+                  className="mt-1 h-4 w-4 rounded border-white/40 bg-white/10"
+                />
+                <span>
+                  <span className="block font-semibold">{t('onboarding.momentum.label')}</span>
+                  <span className="block text-xs text-white/60">
+                    {t('onboarding.momentum.description')}
+                  </span>
+                </span>
+              </label>
             </div>
           </div>
         )}

@@ -93,6 +93,11 @@ export const translations: Record<Language, TranslationTree> = {
           'Fintech',
           'Wellness'
         ]
+      },
+      momentum: {
+        label: 'I am interested in Momentum',
+        description:
+          'Momentum is a 30-minute daily stream you can join live or watch as a recording.'
       }
     },
     common: {
@@ -193,6 +198,11 @@ export const translations: Record<Language, TranslationTree> = {
           'Fjártækni',
           'Heilsa og vellíðan'
         ]
+      },
+      momentum: {
+        label: 'Ég hef áhuga á Momentum',
+        description:
+          'Momentum er 30 minútna daglegt streymi sem þú getur fylgst með í beinni eða horft á upptöku.'
       }
     },
     common: {
@@ -294,6 +304,11 @@ export const translations: Record<Language, TranslationTree> = {
           'Fintech',
           'Velvære'
         ]
+      },
+      momentum: {
+        label: 'Jeg er interessert i Momentum',
+        description:
+          'Momentum er en daglig stream på 30 minutter som du kan følge live eller se som opptak.'
       }
     },
     common: {
@@ -394,6 +409,11 @@ export const translations: Record<Language, TranslationTree> = {
           'Fintech',
           'Welzijn'
         ]
+      },
+      momentum: {
+        label: 'Ik ben geïnteresseerd in Momentum',
+        description:
+          'Momentum is een dagelijkse stream van 30 minuten die je live kunt volgen of als opname kunt bekijken.'
       }
     },
     common: {
