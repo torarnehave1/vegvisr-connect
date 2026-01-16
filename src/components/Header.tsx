@@ -1,4 +1,5 @@
 import LanguageToggle from './LanguageToggle';
+import logo from '../assets/connect.png';
 import type { Language } from '../lib/i18n';
 
 interface HeaderProps {
@@ -9,8 +10,11 @@ interface HeaderProps {
 const Header = ({ language, onLanguageChange }: HeaderProps) => {
   return (
     <header className="flex items-center justify-between px-6 py-6">
-      <div className="text-lg font-semibold tracking-[0.2em] text-white/70">
-        VEGVISR
+      <div className="flex items-center gap-3">
+        <img src={logo} alt="Vegvisr Connect" className="h-10 w-10 rounded-2xl" />
+        <div className="text-lg font-semibold tracking-[0.2em] text-white/70">
+          VEGVISR
+        </div>
       </div>
       <LanguageToggle language={language} onToggle={onLanguageChange} />
     </header>
