@@ -17,7 +17,7 @@ export const clearStoredEmail = () => {
 
 export const getStoredLanguage = (): Language => {
   const stored = localStorage.getItem(LANGUAGE_KEY);
-  if (stored === 'is' || stored === 'en' || stored === 'no') {
+  if (stored === 'is' || stored === 'en' || stored === 'no' || stored === 'nl') {
     return stored;
   }
   return 'en';

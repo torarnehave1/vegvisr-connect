@@ -1,4 +1,4 @@
-export type Language = 'en' | 'is' | 'no';
+export type Language = 'en' | 'is' | 'no' | 'nl';
 
 type TranslationValue = string | string[] | TranslationTree;
 type TranslationTree = Record<string, TranslationValue>;
@@ -297,6 +297,104 @@ export const translations: Record<Language, TranslationTree> = {
       tryAgain: 'Prøv igjen',
       signOut: 'Bruk en annen e-post',
       autosaveHint: 'Fremdriften lagres automatisk.'
+    }
+  },
+  nl: {
+    home: {
+      title: 'Vind je leerpad met Vegvisr',
+      subtitle: 'Beantwoord een paar vragen zodat we je onboarding kunnen afstemmen.',
+      chooseAuth: 'Vul je e-mailadres in om een magische link te krijgen',
+      google: 'Doorgaan met Google',
+      email: 'Doorgaan met e-mail',
+      emailPlaceholder: 'Vul je e-mailadres in',
+      sendLink: 'Stuur magische link',
+      linkSent: 'Magische link verzonden. Controleer je inbox.',
+      language: 'Taal'
+    },
+    auth: {
+      verifying: 'Je toegang wordt geverifieerd...',
+      success: 'Je bent geverifieerd. We sturen je naar de onboarding.',
+      failure: 'We konden die link niet verifiëren. Vraag een nieuwe aan.',
+      callbackError: 'We konden Google-aanmelding niet voltooien. Probeer opnieuw.'
+    },
+    onboarding: {
+      title: 'Jouw Vegvisr onboarding',
+      step: 'Stap',
+      of: 'van',
+      next: 'Volgende stap',
+      back: 'Terug',
+      submit: 'Onboarding verzenden',
+      saving: 'Voortgang opslaan...',
+      saved: 'Alles opgeslagen',
+      successTitle: 'Je bent er klaar voor!',
+      successBody:
+        'We hebben je antwoorden ontvangen. We bekijken ze en nemen zo snel mogelijk contact met je op. De doorlooptijd kan variëren op basis van het aantal inzendingen.',
+      questions: {
+        name: 'Volledige naam',
+        age: 'Leeftijd',
+        education: 'Hoogst behaalde opleiding',
+        employment: 'Huidige werksituatie',
+        location: 'Locatie'
+      },
+      learning: {
+        motivation: 'Wat motiveert je om nu te leren?',
+        motivationHelp: 'Kies wat het beste bij je past.',
+        motivationOptions: [
+          'Ik wil een gestructureerd leerpad',
+          'Ik heb verantwoordelijkheid en momentum nodig',
+          'Ik wil van carrière veranderen of mezelf ontwikkelen',
+          'Ik verken nieuwe ideeën en tools'
+        ],
+        experience: 'Beschrijf je eerdere ervaring met online leren',
+        experienceHelp: 'Kies de uitspraak die het beste past.',
+        experienceOptions: [
+          'Ik ben nieuw met online leren',
+          'Ik heb een paar cursussen geprobeerd',
+          'Ik leer regelmatig online',
+          'Ik begeleid of geef anderen online les'
+        ],
+        time: 'Hoeveel uur per week kun je besteden?',
+        timeHelp: 'Dit helpt ons een realistisch tempo te bepalen.',
+        timeOptions: ['1-3 uur', '3-5 uur', '5-8 uur', '8+ uur'],
+        preferences: 'Voorkeur voor leerstijl',
+        preferencesHelp: 'Kies de stijl die je betrokken houdt.',
+        preferencesOptions: [
+          'Praktische projecten',
+          'Korte lessen met oefening',
+          'Diepe duiken met lezen',
+          'Groepsleren en feedback'
+        ],
+        detailPrompt: 'Voeg details toe (optioneel)'
+      },
+      interests: {
+        title: 'Selecteer je interesses',
+        description: 'Kies de onderwerpen die je het meest aanspreken.',
+        topics: [
+          'Dataliteracy',
+          'AI-basis',
+          'Productdesign',
+          'Servicedesign',
+          'Duurzaamheid',
+          'Leiderschap',
+          'Projectmanagement',
+          'Bedrijfsstrategie',
+          'Creatief coderen',
+          'Storytelling',
+          'Marketinggroei',
+          'UX-onderzoek',
+          'Ondernemerschap',
+          'Fintech',
+          'Welzijn'
+        ]
+      }
+    },
+    common: {
+      loading: 'Laden...',
+      emailLabel: 'E-mailadres',
+      required: 'Dit veld is verplicht',
+      tryAgain: 'Probeer opnieuw',
+      signOut: 'Gebruik een ander e-mailadres',
+      autosaveHint: 'Voortgang wordt automatisch opgeslagen.'
     }
   }
 };
