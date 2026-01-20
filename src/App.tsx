@@ -25,7 +25,7 @@ const App = () => {
   );
 
   const hideHeader = ['/auth/callback', '/auth/verify'].includes(location.pathname);
-  const domainApiBase = import.meta.env.VITE_DOMAIN_API_BASE || '';
+  const domainApiBase = 'https://test-domain-worker.torarnehave.workers.dev';
 
   useEffect(() => {
     let isMounted = true;
