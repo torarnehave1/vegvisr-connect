@@ -30,13 +30,24 @@ const App = () => {
     if (!href) return;
     const url = new URL(href, window.location.origin);
     url.searchParams.set('v', Date.now().toString());
-    let link = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
-    if (!link) {
-      link = document.createElement('link');
+    const icons = Array.from(document.querySelectorAll('link[rel="icon"]')) as HTMLLinkElement[];
+    if (icons.length === 0) {
+      const link = document.createElement('link');
       link.rel = 'icon';
+      link.href = url.toString();
       document.head.appendChild(link);
+    } else {
+      icons.forEach((link) => {
+        link.href = url.toString();
+      });
     }
-    link.href = url.toString();
+
+    const appleIcons = Array.from(
+      document.querySelectorAll('link[rel="apple-touch-icon"]')
+    ) as HTMLLinkElement[];
+    appleIcons.forEach((link) => {
+      link.href = url.toString();
+    });
   };
 
   const setTabTitle = (title: string) => {
