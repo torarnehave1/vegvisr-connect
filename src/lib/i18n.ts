@@ -443,8 +443,34 @@ export const getLearningOptions = (
   return Array.isArray(value) ? value : [];
 };
 
+// Store for branding translation overrides
+let brandingTranslations: Record<string, Record<string, unknown>> | null = null;
+
+export const setBrandingTranslations = (translations: Record<string, Record<string, unknown>> | null) => {
+  brandingTranslations = translations;
+};
+
 export const getTranslation = (language: Language, key: string): string => {
   const parts = key.split('.');
+
+  // First check branding translations override
+  if (brandingTranslations?.[language]) {
+    let brandingNode: unknown = brandingTranslations[language];
+    let found = true;
+    for (const part of parts) {
+      if (brandingNode && typeof brandingNode === 'object' && !Array.isArray(brandingNode)) {
+        brandingNode = (brandingNode as Record<string, unknown>)[part];
+      } else {
+        found = false;
+        break;
+      }
+    }
+    if (found && typeof brandingNode === 'string') {
+      return brandingNode;
+    }
+  }
+
+  // Fall back to bundled translations
   let node: TranslationValue | undefined = translations[language];
   for (const part of parts) {
     if (!node || typeof node === 'string' || Array.isArray(node)) {

@@ -1,3 +1,9 @@
+export type BrandingTranslations = {
+  [language: string]: {
+    [key: string]: string | string[] | { [nestedKey: string]: string | string[] };
+  };
+};
+
 export type BrandingConfig = {
   brand?: {
     name?: string;
@@ -10,6 +16,7 @@ export type BrandingConfig = {
     description?: string;
     ogImageUrl?: string;
   };
+  translations?: BrandingTranslations;
   theme?: {
     background?: {
       base?: string;

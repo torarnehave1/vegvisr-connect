@@ -8,6 +8,7 @@ import Onboarding from './pages/Onboarding';
 import { LanguageContext } from './lib/LanguageContext';
 import { getStoredLanguage, setStoredLanguage } from './lib/storage';
 import { applyBrandingTheme, type BrandingConfig } from './lib/branding';
+import { setBrandingTranslations } from './lib/i18n';
 
 const App = () => {
   const [language, setLanguageState] = useState(getStoredLanguage());
@@ -66,6 +67,10 @@ const App = () => {
         if (!isMounted) return;
         setBranding(data);
         applyBrandingTheme(data);
+        // Apply branding translations if available
+        if (data?.translations) {
+          setBrandingTranslations(data.translations);
+        }
         const fallbackTitle = data?.brand?.name || 'Vegvisr Connect';
         setTabTitle(data?.meta?.title || fallbackTitle);
         if (data?.meta?.faviconUrl) {
