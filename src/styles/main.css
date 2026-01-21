@@ -7,25 +7,49 @@
 :root {
   color-scheme: light;
   font-family: 'Space Grotesk', system-ui, sans-serif;
-  background-color: #0f172a;
+  background-color: var(--brand-bg-base, #0f172a);
+  --brand-bg-base: #0b1020;
+  --brand-bg-top: rgba(59, 130, 246, 0.35);
+  --brand-bg-bottom: rgba(139, 92, 246, 0.35);
+  --brand-text-primary: #e5e7eb;
+  --brand-text-muted: rgba(229, 231, 235, 0.7);
+  --brand-gradient-start: #3b82f6;
+  --brand-gradient-end: #8b5cf6;
+  --brand-card-bg: rgba(255, 255, 255, 0.12);
+  --brand-card-border: rgba(255, 255, 255, 0.2);
+  --brand-btn-start: #3b82f6;
+  --brand-btn-end: #8b5cf6;
+  --brand-btn-text: #ffffff;
 }
 
 body {
   min-height: 100vh;
-  color: #0f172a;
+  color: var(--brand-text-primary);
+  background-color: var(--brand-bg-base);
+}
+
+.brand-background {
+  background:
+    radial-gradient(circle at top, var(--brand-bg-top), transparent 55%),
+    radial-gradient(circle at bottom, var(--brand-bg-bottom), transparent 55%);
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--brand-card-bg);
+  border: 1px solid var(--brand-card-border);
   backdrop-filter: blur(18px);
 }
 
 .gradient-text {
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(90deg, var(--brand-gradient-start), var(--brand-gradient-end));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.brand-button {
+  background: linear-gradient(90deg, var(--brand-btn-start), var(--brand-btn-end));
+  color: var(--brand-btn-text);
 }
 
 .animate-stagger {

@@ -3,10 +3,16 @@ import { Mail, Sparkles } from 'lucide-react';
 import { requestMagicLink } from '../lib/api';
 import { useLanguage } from '../lib/LanguageContext';
 import { useTranslation } from '../lib/useTranslation';
+import type { BrandingConfig } from '../lib/branding';
 
-const Home = () => {
+interface HomeProps {
+  branding?: BrandingConfig | null;
+}
+
+const Home = ({ branding }: HomeProps) => {
   const { language } = useLanguage();
   const t = useTranslation(language);
+  const copy = branding?.copy || {};
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -50,14 +56,16 @@ const Home = () => {
       <div className="space-y-6 text-white">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.3em] text-white/70">
           <Sparkles className="h-4 w-4" />
-          Vegvisr Connect - Early Access
+          {copy.badge || 'Vegvisr Connect - Early Access'}
         </div>
         <h1 className="text-4xl font-semibold leading-tight md:text-5xl">
-          <span className="gradient-text">{t('home.title')}</span>
+          <span className="gradient-text">{copy.headline || t('home.title')}</span>
         </h1>
-        <p className="text-lg text-white/70">{t('home.subtitle')}</p>
+        <p className="text-lg text-white/70">{copy.subheadline || t('home.subtitle')}</p>
         <div className="glass rounded-3xl p-6 shadow-glass">
-          <p className="text-sm font-semibold text-white/80">{t('home.chooseAuth')}</p>
+          <p className="text-sm font-semibold text-white/80">
+            {copy.emailLabel || t('home.chooseAuth')}
+          </p>
           <div className="mt-4 flex flex-col gap-3">
             {/*
             <button
@@ -77,7 +85,7 @@ const Home = () => {
               <div className="mt-2 flex flex-col gap-3 md:flex-row">
                 <input
                   type="email"
-                  placeholder={t('home.emailPlaceholder')}
+                  placeholder={copy.emailPlaceholder || t('home.emailPlaceholder')}
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   className="w-full rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-white/60 focus:outline-none"
@@ -87,10 +95,10 @@ const Home = () => {
                   type="button"
                   onClick={handleMagicLink}
                   disabled={loading}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
+                  className="brand-button flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold shadow-lg shadow-blue-500/30 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   <Mail className="h-4 w-4" />
-                  {t('home.sendLink')}
+                  {copy.cta || t('home.sendLink')}
                 </button>
               </div>
             </div>

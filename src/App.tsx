@@ -7,12 +7,12 @@ import AuthVerify from './pages/AuthVerify';
 import Onboarding from './pages/Onboarding';
 import { LanguageContext } from './lib/LanguageContext';
 import { getStoredLanguage, setStoredLanguage } from './lib/storage';
+import { applyBrandingTheme, type BrandingConfig } from './lib/branding';
 
 const App = () => {
   const [language, setLanguageState] = useState(getStoredLanguage());
   const location = useLocation();
-  const [brandLogo, setBrandLogo] = useState<string | null>(null);
-  const [brandSlogan, setBrandSlogan] = useState<string | null>(null);
+  const [branding, setBranding] = useState<BrandingConfig | null>(null);
 
   const setLanguage = (value: typeof language) => {
     setLanguageState(value);
@@ -25,22 +25,17 @@ const App = () => {
   );
 
   const hideHeader = ['/auth/callback', '/auth/verify'].includes(location.pathname);
-  const domainApiBase = 'https://test-domain-worker.torarnehave.workers.dev';
 
   useEffect(() => {
     let isMounted = true;
     const loadBranding = async () => {
-      if (!domainApiBase) return;
-      const hostname = window.location.hostname;
       try {
-        const response = await fetch(
-          `${domainApiBase}/custom-domain?domain=${encodeURIComponent(hostname)}`
-        );
+        const response = await fetch('/branding.json', { cache: 'no-store' });
         const data = await response.json();
-        if (!response.ok || !data?.success) return;
+        if (!response.ok) return;
         if (!isMounted) return;
-        setBrandLogo(data?.config?.logoUrl || null);
-        setBrandSlogan(data?.config?.slogan || null);
+        setBranding(data);
+        applyBrandingTheme(data);
       } catch {
         // ignore branding errors
       }
@@ -49,24 +44,24 @@ const App = () => {
     return () => {
       isMounted = false;
     };
-  }, [domainApiBase]);
+  }, []);
 
   return (
     <LanguageContext.Provider value={contextValue}>
-      <div className="min-h-screen bg-[#0b1020]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.35),_transparent_55%),radial-gradient(circle_at_bottom,_rgba(139,92,246,0.35),_transparent_55%)]" />
+      <div className="min-h-screen" style={{ backgroundColor: 'var(--brand-bg-base)' }}>
+        <div className="absolute inset-0 brand-background" />
         <div className="relative z-10 min-h-screen">
           {!hideHeader && (
             <Header
               language={language}
               onLanguageChange={setLanguage}
-              logoUrl={brandLogo}
-              slogan={brandSlogan}
+              logoUrl={branding?.brand?.logoUrl}
+              slogan={branding?.brand?.slogan}
             />
           )}
           <main className="px-6 pb-16">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Home branding={branding} />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/auth/verify" element={<AuthVerify />} />
               <Route path="/onboarding" element={<Onboarding />} />
