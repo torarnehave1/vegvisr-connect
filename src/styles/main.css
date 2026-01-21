@@ -11,6 +11,8 @@
   --brand-bg-base: #0b1020;
   --brand-bg-top: rgba(59, 130, 246, 0.35);
   --brand-bg-bottom: rgba(139, 92, 246, 0.35);
+  --brand-bg-gradient: radial-gradient(circle at top, var(--brand-bg-top), transparent 55%),
+    radial-gradient(circle at bottom, var(--brand-bg-bottom), transparent 55%);
   --brand-text-primary: #e5e7eb;
   --brand-text-muted: rgba(229, 231, 235, 0.7);
   --brand-gradient-start: #3b82f6;
@@ -29,9 +31,7 @@ body {
 }
 
 .brand-background {
-  background:
-    radial-gradient(circle at top, var(--brand-bg-top), transparent 55%),
-    radial-gradient(circle at bottom, var(--brand-bg-bottom), transparent 55%);
+  background: var(--brand-bg-gradient);
 }
 
 .glass {

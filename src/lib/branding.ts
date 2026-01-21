@@ -9,6 +9,7 @@ export type BrandingConfig = {
       base?: string;
       radialTop?: string;
       radialBottom?: string;
+      points?: Array<{ id: string; x: number; y: number; color: string }>;
     };
     text?: {
       primary?: string;
@@ -46,15 +47,26 @@ export const applyBrandingTheme = (branding?: BrandingConfig | null) => {
   const theme = branding.theme;
   const gradient = theme.text?.headlineGradient;
   const buttonGradient = theme.button?.bgGradient;
+  const points = theme.background?.points;
 
-  if (theme.background?.base) {
-    root.style.setProperty('--brand-bg-base', theme.background.base);
-  }
-  if (theme.background?.radialTop) {
-    root.style.setProperty('--brand-bg-top', theme.background.radialTop);
-  }
-  if (theme.background?.radialBottom) {
-    root.style.setProperty('--brand-bg-bottom', theme.background.radialBottom);
+  if (points && points.length > 0) {
+    const gradientValue = points
+      .map(
+        (point) =>
+          `radial-gradient(circle at ${point.x}% ${point.y}%, ${point.color} 0%, transparent 60%)`
+      )
+      .join(', ');
+    root.style.setProperty('--brand-bg-gradient', gradientValue);
+  } else {
+    if (theme.background?.base) {
+      root.style.setProperty('--brand-bg-base', theme.background.base);
+    }
+    if (theme.background?.radialTop) {
+      root.style.setProperty('--brand-bg-top', theme.background.radialTop);
+    }
+    if (theme.background?.radialBottom) {
+      root.style.setProperty('--brand-bg-bottom', theme.background.radialBottom);
+    }
   }
   if (theme.text?.primary) {
     root.style.setProperty('--brand-text-primary', theme.text.primary);
