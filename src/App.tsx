@@ -30,7 +30,7 @@ const App = () => {
     let isMounted = true;
     const loadBranding = async () => {
       try {
-        const response = await fetch('/branding.json', { cache: 'no-store' });
+        const response = await fetch(`/branding.json?ts=${Date.now()}`, { cache: 'no-store' });
         const data = await response.json();
         if (!response.ok) return;
         if (!isMounted) return;
