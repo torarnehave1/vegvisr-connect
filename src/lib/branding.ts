@@ -4,6 +4,12 @@ export type BrandingConfig = {
     logoUrl?: string;
     slogan?: string;
   };
+  meta?: {
+    title?: string;
+    faviconUrl?: string;
+    description?: string;
+    ogImageUrl?: string;
+  };
   theme?: {
     background?: {
       base?: string;

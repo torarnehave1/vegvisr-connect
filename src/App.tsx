@@ -30,23 +30,24 @@ const App = () => {
     if (!href) return;
     const url = new URL(href, window.location.origin);
     url.searchParams.set('v', Date.now().toString());
-    const icons = Array.from(document.querySelectorAll('link[rel="icon"]')) as HTMLLinkElement[];
-    if (icons.length === 0) {
-      const link = document.createElement('link');
-      link.rel = 'icon';
-      link.href = url.toString();
-      document.head.appendChild(link);
-    } else {
-      icons.forEach((link) => {
-        link.href = url.toString();
-      });
-    }
+    const faviconHref = url.toString();
 
+    // Remove all existing favicon links to avoid conflicts
+    const existingIcons = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]');
+    existingIcons.forEach((el) => el.remove());
+
+    // Create a single favicon link
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.href = faviconHref;
+    document.head.appendChild(link);
+
+    // Update apple touch icons
     const appleIcons = Array.from(
       document.querySelectorAll('link[rel="apple-touch-icon"]')
     ) as HTMLLinkElement[];
-    appleIcons.forEach((link) => {
-      link.href = url.toString();
+    appleIcons.forEach((appleLink) => {
+      appleLink.href = faviconHref;
     });
   };
 
