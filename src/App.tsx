@@ -26,6 +26,22 @@ const App = () => {
 
   const hideHeader = ['/auth/callback', '/auth/verify'].includes(location.pathname);
 
+  const setFavicon = (href: string) => {
+    if (!href) return;
+    let link = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = href;
+  };
+
+  const setTabTitle = (title: string) => {
+    if (!title) return;
+    document.title = title;
+  };
+
   useEffect(() => {
     let isMounted = true;
     const loadBranding = async () => {
@@ -36,6 +52,11 @@ const App = () => {
         if (!isMounted) return;
         setBranding(data);
         applyBrandingTheme(data);
+        const fallbackTitle = data?.brand?.name || 'Vegvisr Connect';
+        setTabTitle(data?.meta?.title || fallbackTitle);
+        if (data?.meta?.faviconUrl) {
+          setFavicon(data.meta.faviconUrl);
+        }
       } catch {
         // ignore branding errors
       }
