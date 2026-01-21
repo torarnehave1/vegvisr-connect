@@ -28,13 +28,15 @@ const App = () => {
 
   const setFavicon = (href: string) => {
     if (!href) return;
+    const url = new URL(href, window.location.origin);
+    url.searchParams.set('v', Date.now().toString());
     let link = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
     if (!link) {
       link = document.createElement('link');
       link.rel = 'icon';
       document.head.appendChild(link);
     }
-    link.href = href;
+    link.href = url.toString();
   };
 
   const setTabTitle = (title: string) => {
