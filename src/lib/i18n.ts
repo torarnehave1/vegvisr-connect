@@ -428,6 +428,17 @@ export const translations: Record<Language, TranslationTree> = {
 };
 
 export const getInterestTopics = (language: Language) => {
+  // First check branding translations for custom topics
+  if (brandingTranslations?.[language]) {
+    const brandingOnboarding = brandingTranslations[language]?.onboarding as Record<string, unknown> | undefined;
+    const brandingInterests = brandingOnboarding?.interests as Record<string, unknown> | undefined;
+    const brandingTopics = brandingInterests?.topics;
+    if (Array.isArray(brandingTopics)) {
+      return brandingTopics as string[];
+    }
+  }
+
+  // Fall back to bundled translations
   const interests = translations[language].onboarding as TranslationTree;
   const topicValue = (interests?.interests as TranslationTree)?.topics;
   return Array.isArray(topicValue) ? topicValue : [];
@@ -437,6 +448,17 @@ export const getLearningOptions = (
   language: Language,
   key: 'motivationOptions' | 'experienceOptions' | 'timeOptions' | 'preferencesOptions'
 ) => {
+  // First check branding translations for custom options
+  if (brandingTranslations?.[language]) {
+    const brandingOnboarding = brandingTranslations[language]?.onboarding as Record<string, unknown> | undefined;
+    const brandingLearning = brandingOnboarding?.learning as Record<string, unknown> | undefined;
+    const brandingValue = brandingLearning?.[key];
+    if (Array.isArray(brandingValue)) {
+      return brandingValue as string[];
+    }
+  }
+
+  // Fall back to bundled translations
   const onboarding = translations[language].onboarding as TranslationTree;
   const learning = onboarding?.learning as TranslationTree;
   const value = learning?.[key];
