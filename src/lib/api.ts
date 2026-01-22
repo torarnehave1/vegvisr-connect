@@ -21,10 +21,13 @@ const API_BASE = 'https://connect-api.vegvisr.org';
 const apiUrl = (path: string) => `${API_BASE}${path}`;
 
 export const requestMagicLink = async (email: string) => {
+  // Send the current origin so magic link redirects back to the correct domain
+  // This supports custom/proxied domains like connect.slowyou.training
+  const redirectUrl = window.location.origin;
   const response = await fetch(apiUrl('/api/magic-link/request'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email })
+    body: JSON.stringify({ email, redirectUrl })
   });
   if (!response.ok) {
     throw new Error(await getErrorMessage(response, 'Magic link failed'));
