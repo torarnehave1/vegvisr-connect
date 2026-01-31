@@ -2,9 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle2 } from 'lucide-react';
 import StepIndicator from '../components/StepIndicator';
-import { getInterestTopics, getLearningOptions } from '../lib/i18n';
-import { useLanguage } from '../lib/LanguageContext';
-import { useTranslation } from '../lib/useTranslation';
+import onboardingSteps from '../data/onboarding-steps.json';
 import { clearStoredEmail, getStoredEmail, setStoredEmail } from '../lib/storage';
 import {
   loadOnboardingReview,
@@ -30,8 +28,6 @@ const emptyData = {
 };
 
 const Onboarding = () => {
-  const { language } = useLanguage();
-  const t = useTranslation(language);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const reviewToken = searchParams.get('token') || searchParams.get('reviewToken') || '';
@@ -45,11 +41,11 @@ const Onboarding = () => {
   const [submitting, setSubmitting] = useState(false);
   const saveTimer = useRef<number | null>(null);
 
-  const topics = getInterestTopics(language);
-  const motivationOptions = getLearningOptions(language, 'motivationOptions');
-  const experienceOptions = getLearningOptions(language, 'experienceOptions');
-  const timeOptions = getLearningOptions(language, 'timeOptions');
-  const preferencesOptions = getLearningOptions(language, 'preferencesOptions');
+  const topics = onboardingSteps.topics;
+  const motivationOptions = onboardingSteps.onboarding.learning.motivationOptions;
+  const experienceOptions = onboardingSteps.onboarding.learning.experienceOptions;
+  const timeOptions = onboardingSteps.onboarding.learning.timeOptions;
+  const preferencesOptions = onboardingSteps.onboarding.learning.preferencesOptions;
   const totalSteps = 3;
 
   const canGoNext = useMemo(() => {
@@ -192,7 +188,7 @@ const Onboarding = () => {
   if (loading) {
     return (
       <div className="mx-auto mt-32 max-w-lg rounded-3xl bg-white/10 p-8 text-white shadow-glass">
-        {t('common.loading')}
+        {onboardingSteps.common.loading}
       </div>
     );
   }
@@ -201,9 +197,9 @@ const Onboarding = () => {
     return (
       <div className="mx-auto mt-24 max-w-xl rounded-3xl bg-white/10 p-10 text-white shadow-glass">
         <CheckCircle2 className="h-12 w-12 text-emerald-300" />
-        <h2 className="mt-4 text-3xl font-semibold">{t('onboarding.successTitle')}</h2>
-        <p className="mt-3 text-white/70">{t('onboarding.successBody')}</p>
-        <p className="mt-4 text-sm text-white/60">{t('onboarding.successMomentum')}</p>
+        <h2 className="mt-4 text-3xl font-semibold">{onboardingSteps.onboarding.successTitle}</h2>
+        <p className="mt-3 text-white/70">{onboardingSteps.onboarding.successBody}</p>
+        <p className="mt-4 text-sm text-white/60">{onboardingSteps.onboarding.successMomentum}</p>
       </div>
     );
   }
@@ -213,8 +209,8 @@ const Onboarding = () => {
       <div className="glass rounded-3xl p-8 shadow-glass">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-semibold">{t('onboarding.title')}</h1>
-            <p className="text-sm text-white/70">{t('common.autosaveHint')}</p>
+            <h1 className="text-3xl font-semibold">{onboardingSteps.onboarding.title}</h1>
+            <p className="text-sm text-white/70">{onboardingSteps.common.autosaveHint}</p>
           </div>
           <button
             type="button"
@@ -225,14 +221,14 @@ const Onboarding = () => {
             }}
             className="text-xs font-semibold uppercase tracking-widest text-white/60 hover:text-white"
           >
-            {t('common.signOut')}
+            {onboardingSteps.common.signOut}
           </button>
         </div>
         <div className="mt-6">
           <StepIndicator
             current={step}
             total={totalSteps}
-            label={`${t('onboarding.step')} ${step} ${t('onboarding.of')} ${totalSteps}`}
+            label={`${onboardingSteps.common.stepLabel} ${step} ${onboardingSteps.common.ofLabel} ${totalSteps}`}
           />
         </div>
       </div>
@@ -241,7 +237,7 @@ const Onboarding = () => {
         {step === 1 && (
           <div className="grid gap-5 md:grid-cols-2">
             <label className="space-y-2 text-sm">
-              <span className="text-white/80">{t('onboarding.questions.name')}</span>
+              <span className="text-white/80">{onboardingSteps.onboarding.questions.name}</span>
               <input
                 value={formData.name}
                 onChange={(event) => handleChange('name', event.target.value)}
@@ -250,7 +246,7 @@ const Onboarding = () => {
               />
             </label>
             <label className="space-y-2 text-sm">
-              <span className="text-white/80">{t('onboarding.questions.age')}</span>
+              <span className="text-white/80">{onboardingSteps.onboarding.questions.age}</span>
               <input
                 value={formData.age}
                 onChange={(event) => handleChange('age', event.target.value)}
@@ -259,7 +255,7 @@ const Onboarding = () => {
               />
             </label>
             <label className="space-y-2 text-sm">
-              <span className="text-white/80">{t('onboarding.questions.education')}</span>
+              <span className="text-white/80">{onboardingSteps.onboarding.questions.education}</span>
               <input
                 value={formData.education}
                 onChange={(event) => handleChange('education', event.target.value)}
@@ -268,7 +264,7 @@ const Onboarding = () => {
               />
             </label>
             <label className="space-y-2 text-sm">
-              <span className="text-white/80">{t('onboarding.questions.employment')}</span>
+              <span className="text-white/80">{onboardingSteps.onboarding.questions.employment}</span>
               <input
                 value={formData.employment}
                 onChange={(event) => handleChange('employment', event.target.value)}
@@ -277,7 +273,7 @@ const Onboarding = () => {
               />
             </label>
             <label className="space-y-2 text-sm md:col-span-2">
-              <span className="text-white/80">{t('onboarding.questions.location')}</span>
+              <span className="text-white/80">{onboardingSteps.onboarding.questions.location}</span>
               <input
                 value={formData.location}
                 onChange={(event) => handleChange('location', event.target.value)}
@@ -292,8 +288,8 @@ const Onboarding = () => {
           <div className="grid gap-8">
             <div className="space-y-3 text-sm">
               <div className="space-y-1">
-                <span className="text-white/80">{t('onboarding.learning.motivation')}</span>
-                <p className="text-xs text-white/60">{t('onboarding.learning.motivationHelp')}</p>
+                <span className="text-white/80">{onboardingSteps.onboarding.learning.motivation}</span>
+                <p className="text-xs text-white/60">{onboardingSteps.onboarding.learning.motivationHelp}</p>
               </div>
               {renderSingleChoice('motivation', motivationOptions)}
               <textarea
@@ -301,15 +297,15 @@ const Onboarding = () => {
                 value={formData.motivation}
                 onChange={(event) => handleChange('motivation', event.target.value)}
                 disabled={submitting}
-                placeholder={t('onboarding.learning.detailPrompt')}
+                placeholder={onboardingSteps.onboarding.learning.detailPrompt}
                 className="w-full rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-white"
               />
             </div>
 
             <div className="space-y-3 text-sm">
               <div className="space-y-1">
-                <span className="text-white/80">{t('onboarding.learning.experience')}</span>
-                <p className="text-xs text-white/60">{t('onboarding.learning.experienceHelp')}</p>
+                <span className="text-white/80">{onboardingSteps.onboarding.learning.experience}</span>
+                <p className="text-xs text-white/60">{onboardingSteps.onboarding.learning.experienceHelp}</p>
               </div>
               {renderSingleChoice('experience', experienceOptions)}
               <textarea
@@ -317,7 +313,7 @@ const Onboarding = () => {
                 value={formData.experience}
                 onChange={(event) => handleChange('experience', event.target.value)}
                 disabled={submitting}
-                placeholder={t('onboarding.learning.detailPrompt')}
+                placeholder={onboardingSteps.onboarding.learning.detailPrompt}
                 className="w-full rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-white"
               />
             </div>
@@ -325,15 +321,15 @@ const Onboarding = () => {
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-3 text-sm">
                 <div className="space-y-1">
-                  <span className="text-white/80">{t('onboarding.learning.time')}</span>
-                  <p className="text-xs text-white/60">{t('onboarding.learning.timeHelp')}</p>
+                  <span className="text-white/80">{onboardingSteps.onboarding.learning.time}</span>
+                  <p className="text-xs text-white/60">{onboardingSteps.onboarding.learning.timeHelp}</p>
                 </div>
                 {renderSingleChoice('time', timeOptions)}
               </div>
               <div className="space-y-3 text-sm">
                 <div className="space-y-1">
-                  <span className="text-white/80">{t('onboarding.learning.preferences')}</span>
-                  <p className="text-xs text-white/60">{t('onboarding.learning.preferencesHelp')}</p>
+                  <span className="text-white/80">{onboardingSteps.onboarding.learning.preferences}</span>
+                  <p className="text-xs text-white/60">{onboardingSteps.onboarding.learning.preferencesHelp}</p>
                 </div>
                 {renderSingleChoice('preferences', preferencesOptions)}
               </div>
@@ -343,8 +339,10 @@ const Onboarding = () => {
 
         {step === 3 && (
           <div>
-            <h2 className="text-xl font-semibold">{t('onboarding.interests.title')}</h2>
-            <p className="mt-2 text-sm text-white/70">{t('onboarding.interests.description')}</p>
+            <h2 className="text-xl font-semibold">{onboardingSteps.onboarding.interests.title}</h2>
+            <p className="mt-2 text-sm text-white/70">
+              {onboardingSteps.onboarding.interests.description}
+            </p>
             <div className="mt-6 grid gap-3 md:grid-cols-3">
               {topics.map((topic) => {
                 const selected = formData.interests.includes(topic);
@@ -375,9 +373,9 @@ const Onboarding = () => {
                   className="mt-1 h-4 w-4 rounded border-white/40 bg-white/10"
                 />
                 <span>
-                  <span className="block font-semibold">{t('onboarding.momentum.label')}</span>
+                  <span className="block font-semibold">{onboardingSteps.onboarding.momentum.label}</span>
                   <span className="block text-xs text-white/60">
-                    {t('onboarding.momentum.description')}
+                    {onboardingSteps.onboarding.momentum.description}
                   </span>
                 </span>
               </label>
@@ -388,8 +386,8 @@ const Onboarding = () => {
 
       <div className="flex flex-col items-center justify-between gap-4 rounded-3xl bg-white/5 px-6 py-4 text-sm text-white/70 md:flex-row">
         <div>
-          {savingState === 'saving' && t('onboarding.saving')}
-          {savingState === 'saved' && t('onboarding.saved')}
+          {savingState === 'saving' && onboardingSteps.common.saving}
+          {savingState === 'saved' && onboardingSteps.common.saved}
         </div>
         <div className="flex gap-3">
           {step > 1 && (
@@ -399,7 +397,7 @@ const Onboarding = () => {
               disabled={submitting}
               className="rounded-full border border-white/30 px-4 py-2 text-white/80 hover:bg-white/10"
             >
-              {t('onboarding.back')}
+              {onboardingSteps.common.back}
             </button>
           )}
           {step < totalSteps && (
@@ -409,7 +407,7 @@ const Onboarding = () => {
               onClick={handleNext}
               className="rounded-full bg-white px-4 py-2 font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {t('onboarding.next')}
+              {onboardingSteps.common.next}
             </button>
           )}
           {step === totalSteps && (
@@ -419,7 +417,7 @@ const Onboarding = () => {
               onClick={handleSubmit}
               className="rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {t('onboarding.submit')}
+              {onboardingSteps.common.submit}
             </button>
           )}
         </div>
