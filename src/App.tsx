@@ -6,22 +6,16 @@ import AuthCallback from './pages/AuthCallback';
 import AuthVerify from './pages/AuthVerify';
 import Onboarding from './pages/Onboarding';
 import { LanguageContext } from './lib/LanguageContext';
-import { getStoredLanguage, setStoredLanguage } from './lib/storage';
 import { applyBrandingTheme, type BrandingConfig } from './lib/branding';
 import { setBrandingTranslations } from './lib/i18n';
 
 const App = () => {
-  const [language, setLanguageState] = useState(getStoredLanguage());
+  const language = 'en';
   const location = useLocation();
   const [branding, setBranding] = useState<BrandingConfig | null>(null);
 
-  const setLanguage = (value: typeof language) => {
-    setLanguageState(value);
-    setStoredLanguage(value);
-  };
-
   const contextValue = useMemo(
-    () => ({ language, setLanguage }),
+    () => ({ language, setLanguage: () => {} }),
     [language]
   );
 
@@ -93,8 +87,6 @@ const App = () => {
         <div className="relative z-10 min-h-screen">
           {!hideHeader && (
             <Header
-              language={language}
-              onLanguageChange={setLanguage}
               logoUrl={branding?.brand?.logoUrl}
               slogan={branding?.brand?.slogan}
             />
