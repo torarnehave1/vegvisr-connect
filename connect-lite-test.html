@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Vegvisr Connect Lite (Dynamic Steps)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body {
+      background:
+        radial-gradient(circle at top, rgba(56,189,248,0.2), transparent 55%),
+        radial-gradient(circle at bottom, rgba(139,92,246,0.2), transparent 55%),
+        #0b1220;
+    }
+    button { pointer-events: auto; }
+    .choice, .interest { cursor: pointer; }
+    .is-selected {
+      border-color: rgba(255,255,255,0.7) !important;
+      background-color: rgba(255,255,255,0.18) !important;
+      color: rgba(255,255,255,0.95) !important;
+    }
+    .work-note {
+      background-color: #ffd580;
+      color: #333;
+      font-size: 14px;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 5px solid #ccc;
+      border-radius: 4px;
+    }
+    .work-note cite { display: block; text-align: right; font-style: normal; color: #666; margin-top: 0.5em; }
+    .fancy-quote {
+      font-style: italic; background-color: #f9f9f9; border-left: 5px solid #ccc;
+      font-size: 1.2em; padding: 1em; margin: 1em 0; color: #333;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .fancy-quote cite { display: block; text-align: right; font-style: normal; color: #666; margin-top: 0.5em; }
+    .section { padding: 15px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); box-sizing: border-box; }
+    .fancy-title {
+      background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); font-weight: bold; border-radius: 8px; overflow: hidden;
+    }
+    .imagequote-element {
+      margin: 2em 0; border-radius: 12px; min-height: 200px; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center; position: relative; overflow: hidden;
+      color: white; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7); background-size: cover; background-position: center;
+    }
+    .imagequote-element::before { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.3); z-index: 1; }
+    .imagequote-content { position: relative; z-index: 2; font-size: 1.5rem; font-weight: 600; line-height: 1.4; max-width: 80%; }
+    .imagequote-citation { position: relative; z-index: 2; margin-top: 1em; font-size: 1rem; font-style: italic; opacity: 0.9; }
+
+    #step-1, #step-2, #step-3 { color: rgba(255,255,255,0.9); }
+    #step-1 a, #step-2 a, #step-3 a { text-decoration: underline; }
+    #step-1 code, #step-2 code, #step-3 code { background: rgba(255,255,255,0.08); padding: 0.1em 0.3em; border-radius: 6px; }
+    #step-1 pre, #step-2 pre, #step-3 pre { background: rgba(0,0,0,0.35); padding: 12px; border-radius: 12px; overflow: auto; }
+  </style>
+</head>
+
+<body class="min-h-screen text-white">
+  <main class="mx-auto max-w-3xl px-6 py-10">
+    <header class="mb-8">
+      <h1 class="text-3xl font-semibold">Vegvisr Connect (Dynamic Steps)</h1>
+      <p class="mt-2 text-white/70">Steps are loaded from KG nodes named STEP 1 / STEP 2 / STEP 3.</p>
+      <p id="debugLine" class="mt-3 text-xs text-white/60"></p>
+    </header>
+
+    <section id="view-request" class="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl">
+      <h2 class="text-xl font-semibold">Request Magic Link</h2>
+      <p class="mt-1 text-sm text-white/60">Enter your email and we will send a login link.</p>
+      <div class="mt-4 space-y-3">
+        <input id="emailInput" type="email" placeholder="you@vegvisr.org"
+          class="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder:text-white/40" />
+        <button id="sendLinkBtn" type="button"
+          class="rounded-xl bg-gradient-to-r from-sky-500 to-violet-500 px-5 py-3 text-sm font-semibold shadow-lg">
+          Send magic link
+        </button>
+        <p id="requestStatus" class="text-sm text-white/70"></p>
+      </div>
+    </section>
+
+    <section id="view-verify" class="mt-6 hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl">
+      <h2 class="text-xl font-semibold">Verifying...</h2>
+      <p id="verifyStatus" class="mt-2 text-sm text-white/70">Checking token...</p>
+      <div class="mt-4">
+        <button id="backToRequestBtn" type="button"
+          class="rounded-full border border-white/30 px-4 py-2 text-white/80">
+          Back
+        </button>
+      </div>
+    </section>
+
+    <section id="view-onboarding" class="mt-6 hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold">Your onboarding</h2>
+        <button id="signOutBtn" type="button" class="text-xs uppercase tracking-widest text-white/60 hover:text-white">
+          Use a different email
+        </button>
+      </div>
+
+      <div class="mt-4">
+        <div class="text-xs text-white/60">Step <span id="stepLabel">1</span> of 3</div>
+        <div class="mt-2 h-2 w-full rounded-full bg-white/10">
+          <div id="stepProgress" class="h-2 rounded-full bg-gradient-to-r from-sky-500 to-violet-500" style="width: 33%;"></div>
+        </div>
+      </div>
+
+      <div id="step-1" class="mt-6 space-y-4"></div>
+      <div id="step-2" class="mt-6 hidden space-y-6"></div>
+      <div id="step-3" class="mt-6 hidden"></div>
+
+      <div class="mt-6 flex items-center justify-between text-sm text-white/70">
+        <span id="saveStatus">-</span>
+        <div class="flex gap-3">
+          <button id="backBtn" type="button" class="rounded-full border border-white/30 px-4 py-2 text-white/80">Back</button>
+          <button id="nextBtn" type="button" class="rounded-full bg-white px-4 py-2 font-semibold text-slate-900">Next step</button>
+          <button id="submitBtn" type="button" class="hidden rounded-full bg-gradient-to-r from-sky-500 to-violet-500 px-4 py-2 font-semibold text-white">
+            Submit onboarding
+          </button>
+        </div>
+      </div>
+
+      <div id="submitStatus" class="mt-4 text-sm text-rose-200"></div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = 'https://connect-api.vegvisr.org';
+    const STORAGE_KEY = 'vegvisr_connect_email';
+    const DATA_KEY = 'vegvisr_onboarding_data';
+    const STEP_KEY = 'vegvisr_onboarding_step';
+    const REDIRECT_URL_OVERRIDE = '';
+    const KG_BASE = 'https://knowledge.vegvisr.org/getknowgraph';
+    const GRAPH_ID = 'graph_1769887409014';
+
+    const qs = new URLSearchParams(window.location.search);
+    const token = qs.get('token');
+
+    const viewRequest = document.getElementById('view-request');
+    const viewVerify = document.getElementById('view-verify');
+    const viewOnboarding = document.getElementById('view-onboarding');
+
+    const emailInput = document.getElementById('emailInput');
+    const requestStatus = document.getElementById('requestStatus');
+    const sendLinkBtn = document.getElementById('sendLinkBtn');
+
+    const verifyStatus = document.getElementById('verifyStatus');
+    const backToRequestBtn = document.getElementById('backToRequestBtn');
+
+    const stepLabel = document.getElementById('stepLabel');
+    const stepProgress = document.getElementById('stepProgress');
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    const step3 = document.getElementById('step-3');
+
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const saveStatus = document.getElementById('saveStatus');
+    const submitStatus = document.getElementById('submitStatus');
+    const signOutBtn = document.getElementById('signOutBtn');
+    const debugLine = document.getElementById('debugLine');
+
+    const data = {};
+    let step = 1;
+    let email = localStorage.getItem(STORAGE_KEY) || '';
+    let kgNodes = [];
+
+    const debug = (msg) => { if (debugLine) debugLine.textContent = msg; };
+
+    const fetchWithTimeout = async (url, options = {}, ms = 12000) => {
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), ms);
+      try { return await fetch(url, { ...options, signal: ctl.signal }); }
+      finally { clearTimeout(t); }
+    };
+
+    function show(view) {
+      viewRequest.classList.add('hidden');
+      viewVerify.classList.add('hidden');
+      viewOnboarding.classList.add('hidden');
+      view.classList.remove('hidden');
+    }
+
+    function renderStep() {
+      stepLabel.textContent = step;
+      stepProgress.style.width = step === 1 ? '33%' : step === 2 ? '67%' : '100%';
+      step1.classList.toggle('hidden', step !== 1);
+      step2.classList.toggle('hidden', step !== 2);
+      step3.classList.toggle('hidden', step !== 3);
+      backBtn.classList.toggle('hidden', step === 1);
+      nextBtn.classList.toggle('hidden', step === 3);
+      submitBtn.classList.toggle('hidden', step !== 3);
+    }
+
+    function saveLocal() {
+      localStorage.setItem(DATA_KEY, JSON.stringify(data));
+      localStorage.setItem(STEP_KEY, String(step));
+      saveStatus.textContent = 'Saved locally';
+    }
+
+    async function saveProgress() {
+      if (!email) return;
+      try {
+        saveStatus.textContent = 'Saving...';
+        const res = await fetchWithTimeout(`${API_BASE}/api/onboarding/progress`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, step, data })
+        }, 12000);
+        saveStatus.textContent = res.ok ? 'Saved' : `Save failed (${res.status})`;
+      } catch (e) {
+        saveStatus.textContent = 'Save failed (network/timeout)';
+      }
+    }
+
+    function scheduleSave() {
+      saveLocal();
+      clearTimeout(window.__saveTimer);
+      window.__saveTimer = setTimeout(saveProgress, 500);
+    }
+
+    function parseVegvisrElements(html) {
+      html = html.replace(/\[WNOTE\s*\|([^\]]*)\]([\s\S]*?)\[END\s+WNOTE\]/gi, (m, params, content) => {
+        const cited = params.match(/Cited\s*=\s*['"]?([^'"\];]+)/i)?.[1] || '';
+        return `<div class="work-note">${marked.parse(content.trim())}${cited ? `<cite>- ${cited}</cite>` : ''}</div>`;
+      });
+      html = html.replace(/\[QUOTE\s*\|([^\]]*)\]([\s\S]*?)\[END\s+QUOTE\]/gi, (m, params, content) => {
+        const cited = params.match(/Cited\s*=\s*['"]?([^'"\];]+)/i)?.[1] || '';
+        return `<div class="fancy-quote">${marked.parse(content.trim())}${cited ? `<cite>- ${cited}</cite>` : ''}</div>`;
+      });
+      html = html.replace(/\[SECTION\s*\|([^\]]*)\]([\s\S]*?)\[END\s+SECTION\]/gi, (m, style, content) => {
+        return `<div class="section" style="${style}">${marked.parse(content.trim())}</div>`;
+      });
+      return html;
+    }
+
+    function tryParseJson(text) {
+      if (!text) return null;
+      const raw = String(text).trim();
+      try { return JSON.parse(raw); } catch {}
+
+      // Attempt a light repair: missing closing brace at the end
+      if (raw.startsWith('{') && !raw.endsWith('}')) {
+        const patched = raw + '}';
+        try { return JSON.parse(patched); } catch {}
+      }
+
+      return null;
+    }
+
+    function renderJsonStep(json, containerEl) {
+      const title = json.title ? `<h3 class="text-lg font-semibold">${json.title}</h3>` : '';
+      const blocks = Array.isArray(json.blocks) ? json.blocks : [];
+
+      const blockHtml = blocks.map((block) => {
+        if (block.type === 'inputs' && Array.isArray(block.fields)) {
+          const fields = block.fields.map((f) => {
+            const colSpan = f.colSpan2 ? 'md:col-span-2' : '';
+            return `
+              <div class="${colSpan}">
+                <input id="${f.id}" placeholder="${f.placeholder || ''}"
+                  class="w-full rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-white placeholder:text-white/40" />
+              </div>
+            `;
+          }).join('');
+          return `<div class="grid gap-3 md:grid-cols-2">${fields}</div>`;
+        }
+
+        if (block.type === 'choice') {
+          const options = (block.options || []).map((opt) => `
+            <button type="button"
+              class="choice rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-left text-sm text-white/80 hover:border-white/40 hover:bg-white/10"
+              data-choice="${opt}" data-field="${block.field}">
+              ${opt}
+            </button>
+          `).join('');
+          const textarea = block.textarea
+            ? `<textarea id="${block.field}" rows="2" placeholder="${block.placeholder || ''}"
+                class="mt-3 w-full rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-white placeholder:text-white/40"></textarea>`
+            : '';
+          return `
+            <div class="space-y-3">
+              <div class="text-sm text-white/80">${block.label || ''}</div>
+              <div class="grid gap-3 md:grid-cols-2">${options}</div>
+              ${textarea}
+            </div>
+          `;
+        }
+
+        if (block.type === 'interests') {
+          const field = block.field || 'interests';
+          const options = (block.options || []).map((opt) => `
+            <button type="button"
+              class="interest rounded-2xl border border-white/20 bg-white/5 px-4 py-3 text-left text-sm text-white/80 hover:border-white/40 hover:bg-white/10"
+              data-interest="${opt}" data-field="${field}">
+              ${opt}
+            </button>
+          `).join('');
+          return `
+            <div class="space-y-3">
+              <div class="text-sm text-white/80">${block.label || ''}</div>
+              <div class="grid gap-3 md:grid-cols-3">${options}</div>
+            </div>
+          `;
+        }
+
+        return '';
+      }).join('');
+
+      containerEl.innerHTML = `
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-4">
+          ${title}
+          ${blockHtml}
+        </div>
+      `;
+      bindDynamicFields(containerEl);
+    }
+
+    async function fetchGraph() {
+      const res = await fetchWithTimeout(`${KG_BASE}?id=${encodeURIComponent(GRAPH_ID)}`, {}, 12000);
+      if (!res.ok) throw new Error(`KG fetch failed (${res.status})`);
+      const payload = await res.json();
+      kgNodes = Array.isArray(payload?.nodes) ? payload.nodes : [];
+      return kgNodes;
+    }
+
+    function findStepNode(stepNumber) {
+      const wanted = `STEP ${stepNumber}`.trim().toUpperCase();
+      return kgNodes.find(n => String(n?.label || '').trim().replace(/\s+/g, ' ').toUpperCase() === wanted) || null;
+    }
+
+    function bindDynamicFields(containerEl) {
+      containerEl.querySelectorAll('input, textarea, select').forEach(el => {
+        const id = el.id || el.name;
+        if (!id) return;
+
+        if (data[id] != null) {
+          if (el.type === 'checkbox') el.checked = !!data[id];
+          else el.value = data[id];
+        }
+
+        const handler = () => {
+          if (el.type === 'checkbox') data[id] = el.checked;
+          else data[id] = el.value;
+          scheduleSave();
+        };
+        el.addEventListener('input', handler);
+        el.addEventListener('change', handler);
+      });
+
+      containerEl.querySelectorAll('[data-choice][data-field]').forEach(btn => {
+        const field = btn.getAttribute('data-field');
+        if (data[field]) {
+          containerEl.querySelectorAll(`[data-choice][data-field="${field}"]`).forEach(b => b.classList.remove('is-selected'));
+          containerEl.querySelectorAll(`[data-choice][data-field="${field}"]`).forEach(b => {
+            if (b.getAttribute('data-choice') === data[field]) b.classList.add('is-selected');
+          });
+        }
+        btn.addEventListener('click', () => {
+          containerEl.querySelectorAll(`[data-choice][data-field="${field}"]`).forEach(b => b.classList.remove('is-selected'));
+          btn.classList.add('is-selected');
+          data[field] = btn.getAttribute('data-choice') || btn.textContent.trim();
+          scheduleSave();
+        });
+      });
+
+      containerEl.querySelectorAll('[data-interest][data-field]').forEach(btn => {
+        const field = btn.getAttribute('data-field') || 'interests';
+        const value = btn.getAttribute('data-interest') || btn.textContent.trim();
+        if (!Array.isArray(data[field])) data[field] = [];
+
+        if (data[field].includes(value)) btn.classList.add('is-selected');
+
+        btn.addEventListener('click', () => {
+          const arr = Array.isArray(data[field]) ? data[field] : [];
+          const exists = arr.includes(value);
+          const next = exists ? arr.filter(v => v !== value) : [...arr, value];
+          data[field] = next;
+          btn.classList.toggle('is-selected', !exists);
+          scheduleSave();
+        });
+      });
+    }
+
+    function renderStepFromKG(stepNumber, containerEl) {
+      const node = findStepNode(stepNumber);
+      if (!node) {
+        containerEl.innerHTML = `
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="text-sm font-semibold">Missing node</div>
+            <div class="mt-1 text-sm text-white/70">Could not find node labeled <code>STEP ${stepNumber}</code>.</div>
+          </div>
+        `;
+        return;
+      }
+
+      const json = tryParseJson(node.info);
+      if (json) {
+        renderJsonStep(json, containerEl);
+        return;
+      }
+
+      const html = parseVegvisrElements(marked.parse(node.info || ''));
+      containerEl.innerHTML = `
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div class="text-lg font-semibold">${node.label || `STEP ${stepNumber}`}</div>
+          <div class="prose prose-invert max-w-none mt-3">${html}</div>
+        </div>
+      `;
+      bindDynamicFields(containerEl);
+    }
+
+    function loadSaved() {
+      const saved = localStorage.getItem(DATA_KEY);
+      const savedStep = localStorage.getItem(STEP_KEY);
+      if (saved) {
+        try { Object.assign(data, JSON.parse(saved)); } catch {}
+      }
+      if (savedStep) step = Number(savedStep) || 1;
+      renderStep();
+    }
+
+    sendLinkBtn.addEventListener('click', async () => {
+      const value = emailInput.value.trim();
+      if (!value) {
+        requestStatus.textContent = 'Please enter an email.';
+        return;
+      }
+      requestStatus.textContent = 'Sending magic link...';
+      sendLinkBtn.disabled = true;
+
+      try {
+        const redirectUrl = REDIRECT_URL_OVERRIDE || window.location.origin;
+        const res = await fetchWithTimeout(`${API_BASE}/api/magic-link/request`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: value, redirectUrl })
+        }, 12000);
+        requestStatus.textContent = res.ok ? 'Link sent. Check your inbox.' : `Failed (${res.status}).`;
+      } catch (e) {
+        requestStatus.textContent = 'Failed (network/timeout).';
+      } finally {
+        sendLinkBtn.disabled = false;
+      }
+    });
+
+    backToRequestBtn.addEventListener('click', () => show(viewRequest));
+
+    signOutBtn.addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(DATA_KEY);
+      localStorage.removeItem(STEP_KEY);
+      window.location.href = window.location.origin;
+    });
+
+    backBtn.addEventListener('click', () => { if (step > 1) { step--; renderStep(); scheduleSave(); } });
+    nextBtn.addEventListener('click', () => { if (step < 3) { step++; renderStep(); scheduleSave(); } });
+
+    submitBtn.addEventListener('click', async () => {
+      if (!email) return;
+      submitStatus.textContent = '';
+      try {
+        const res = await fetchWithTimeout(`${API_BASE}/api/onboarding`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, data })
+        }, 12000);
+        submitStatus.textContent = res.ok ? 'Submitted! Thank you.' : `Submission failed (${res.status}).`;
+      } catch {
+        submitStatus.textContent = 'Submission failed (network/timeout).';
+      }
+    });
+
+    (async () => {
+      try {
+        debug('Loading steps from knowledge graph...');
+        await fetchGraph();
+        renderStepFromKG(1, step1);
+        renderStepFromKG(2, step2);
+        renderStepFromKG(3, step3);
+        debug('Steps loaded.');
+
+        if (token) {
+          show(viewVerify);
+          verifyStatus.textContent = 'Checking token...';
+          const res = await fetchWithTimeout(`${API_BASE}/api/magic-link/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token })
+          }, 12000);
+
+          if (!res.ok) throw new Error(`Verify failed (${res.status})`);
+          const payload = await res.json();
+          email = payload.email;
+          localStorage.setItem(STORAGE_KEY, email);
+          show(viewOnboarding);
+          loadSaved();
+          scheduleSave();
+          return;
+        }
+
+        if (email) {
+          show(viewOnboarding);
+          loadSaved();
+          scheduleSave();
+        } else {
+          show(viewRequest);
+        }
+      } catch (err) {
+        debug(`Error: ${err.message || err}`);
+        show(viewRequest);
+      }
+    })();
+  </script>
+</body>
+</html>
